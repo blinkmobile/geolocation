@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>geolocation example</title>
+</head>
+<body>
+  <script src="../geolocation.js"></script>
+  <script>
+  geolocation.getCurrentPosition(function (position) {
+    document.body.insertAdjacentHTML('afterbegin', '<pre>' + JSON.stringify(position, null, 2) + '</pre>');
+  });
+  </script>
+</body>
+</html>
