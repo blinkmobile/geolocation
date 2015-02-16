@@ -1,0 +1,22 @@
+{
+  "name": "geolocation",
+  "version": "1.0.0",
+  "description": "wrapper for HTML5 GeoLocation",
+  "main": "geolocation.js",
+  "scripts": {
+    "test": "$(npm bin)/eslint . && node tests"
+  },
+  "files": [
+    "geolocation.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blinkmobile/geolocation.git"
+  },
+  "author": "Ron Waldon",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "eslint": "^0.14.1",
+    "tape": "^3.5.0"
+  }
+}
