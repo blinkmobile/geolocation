@@ -16,7 +16,7 @@
   "author": "Ron Waldon",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "eslint": "^0.14.1",
-    "tape": "^3.5.0"
+    "eslint": "^0.23.0",
+    "tape": "^4.0"
   }
 }
