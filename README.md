@@ -2,6 +2,9 @@
 
 wrapper for HTML5 GeoLocation
 
+[![npm module](https://img.shields.io/npm/v/@blinkmobile/geolocation.svg)](https://www.npmjs.com/package/@blinkmobile/geolocation)
+[![travis-ci](https://img.shields.io/travis/blinkmobile/geolocation.svg)](https://travis-ci.org/blinkmobile/geolocation)
+
 ## why?
 
 We've noticed that different browsers (and web views) sometimes return a
