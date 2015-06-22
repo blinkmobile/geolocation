@@ -17,6 +17,8 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "eslint": "^0.23.0",
+    "eslint-config-semistandard": "^4.0.0",
+    "eslint-config-standard": "^3.3.0",
     "tape": "^4.0"
   }
 }
