@@ -3,17 +3,17 @@
 (function (root, factory) {
   'use strict';
   if (typeof define === 'function' && define.amd) {
-    define([], factory);
+    define(['@blinkmobile/jqpromise'], factory);
   } else if (typeof exports === 'object') {
-    module.exports = factory();
+    module.exports = factory(require('@blinkmobile/jqpromise'));
   } else {
     if (root.BMP) {
-      root.BMP.geolocation = factory();
+      root.BMP.geolocation = factory(root.JQPromise);
     } else {
-      root.geolocation = factory();
+      root.geolocation = factory(root.JQPromise);
     }
   }
-}(this, function () {
+}(this, function (JQPromise) {
   'use strict';
 
   var api;
@@ -104,7 +104,7 @@
         return Promise;
       }
       if (typeof $ !== 'undefined' && $.Deferred) {
-        return $.Deferred;
+        return JQPromise;
       }
       return false;
     },

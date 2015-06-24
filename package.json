@@ -4,7 +4,7 @@
   "description": "wrapper for HTML5 GeoLocation",
   "main": "geolocation.js",
   "scripts": {
-    "test": "$(npm bin)/eslint . && node tests"
+    "test": "eslint . && node tests && karma start"
   },
   "files": [
     "geolocation.js"
@@ -17,8 +17,18 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "eslint": "^0.23.0",
-    "eslint-config-semistandard": "^4.0.0",
-    "eslint-config-standard": "^3.3.0",
+    "eslint-config-semistandard": "^4.0",
+    "eslint-config-standard": "^3.3",
+    "jquery": "^2.1.4",
+    "karma": "^0.12.37",
+    "karma-browserify": "^4.2",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-phantomjs-launcher": "^0.2.0",
+    "karma-tap": "^1.0",
+    "phantomjs": "^1.9",
     "tape": "^4.0"
+  },
+  "dependencies": {
+    "@blinkmobile/jqpromise": "^1.0.0"
   }
 }

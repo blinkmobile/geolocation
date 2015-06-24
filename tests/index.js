@@ -1,7 +1,8 @@
 'use strict';
 
-// 3rd-party modules
+// foreign modules
 
+var $ = require('jquery');
 var test = require('tape');
 
 // our modules
@@ -39,6 +40,8 @@ var testPosition = {
   }
 };
 geolocation.setGeoLocation(spy);
+
+global.$ = $;
 
 test(function (t) {
   t.ok(geolocation);
