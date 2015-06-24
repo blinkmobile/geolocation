@@ -1,6 +1,6 @@
 {
   "name": "@blinkmobile/geolocation",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "wrapper for HTML5 GeoLocation",
   "main": "geolocation.js",
   "scripts": {
