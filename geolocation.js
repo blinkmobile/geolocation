@@ -1,43 +1,43 @@
-/*globals $:false*/
+/* globals $:false */
 // UMD: https://github.com/umdjs/umd/blob/master/returnExports.js
 (function (root, factory) {
-  'use strict';
+  'use strict'
   if (typeof define === 'function' && define.amd) {
-    define(['@blinkmobile/jqpromise'], factory);
+    define(['@blinkmobile/jqpromise'], factory)
   } else if (typeof exports === 'object') {
-    module.exports = factory(require('@blinkmobile/jqpromise'));
+    module.exports = factory(require('@blinkmobile/jqpromise'))
   } else {
     if (root.BMP) {
-      root.BMP.geolocation = factory(root.JQPromise);
+      root.BMP.geolocation = factory(root.JQPromise)
     } else {
-      root.geolocation = factory(root.JQPromise);
+      root.geolocation = factory(root.JQPromise)
     }
   }
 }(this, function (JQPromise) {
-  'use strict';
+  'use strict'
 
-  var api;
+  var api
 
   var module = {
 
     setGeoLocation: function (geolocation) {
-      api = geolocation;
+      api = geolocation
     },
 
     getGeoLocation: function () {
       if (api && api.getCurrentPosition) {
-        return api;
+        return api
       }
       if (typeof navigator !== 'undefined' && navigator.geolocation &&
           navigator.geolocation.getCurrentPosition) {
-        return navigator.geolocation;
+        return navigator.geolocation
       }
-      return false;
+      return false
     },
 
     clonePosition: function (position) {
       if (!position || typeof position !== 'object' || !position.coords || typeof position.coords !== 'object') {
-        throw new TypeError('cannot clone non-Position object');
+        throw new TypeError('cannot clone non-Position object')
       }
       return {
         coords: {
@@ -49,7 +49,7 @@
           heading: position.coords.heading,
           speed: position.coords.speed
         }
-      };
+      }
     },
 
     DEFAULT_POSITION_OPTIONS: {
@@ -65,71 +65,71 @@
     },
 
     mergePositionOptions: function (options) {
-      var result;
+      var result
       if (!options || typeof options !== 'object') {
-        return module.DEFAULT_POSITION_OPTIONS;
+        return module.DEFAULT_POSITION_OPTIONS
       }
-      result = {};
+      result = {}
       Object.keys(module.POSITION_OPTION_TYPES).forEach(function (option) {
-        var type = module.POSITION_OPTION_TYPES[option];
-        var value = options[option];
+        var type = module.POSITION_OPTION_TYPES[option]
+        var value = options[option]
         if (typeof options[option] === type && (type !== 'number' || !isNaN(value))) {
-          result[option] = options[option];
+          result[option] = options[option]
         } else {
-          result[option] = module.DEFAULT_POSITION_OPTIONS[option];
+          result[option] = module.DEFAULT_POSITION_OPTIONS[option]
         }
-      });
-      return result;
+      })
+      return result
     },
 
     requestCurrentPosition: function (onSuccess, onError, options) {
-      var geolocation = module.getGeoLocation();
+      var geolocation = module.getGeoLocation()
       if (!geolocation) {
-        throw new Error('the current web engine does not support GeoLocation');
+        throw new Error('the current web engine does not support GeoLocation')
       }
       if (typeof onSuccess !== 'function') {
-        throw new TypeError('getCurrentPosition(): 1st parameter must be a Function to handle success');
+        throw new TypeError('getCurrentPosition(): 1st parameter must be a Function to handle success')
       }
       if (typeof onError !== 'function') {
-        throw new TypeError('getCurrentPosition(): 2nd parameter must be a Function to handle error');
+        throw new TypeError('getCurrentPosition(): 2nd parameter must be a Function to handle error')
       }
-      options = module.mergePositionOptions(options);
+      options = module.mergePositionOptions(options)
       return geolocation.getCurrentPosition(function (position) {
-        onSuccess(module.clonePosition(position));
-      }, onError, options);
+        onSuccess(module.clonePosition(position))
+      }, onError, options)
     },
 
     getPromiseConstructor: function () {
       if (typeof Promise !== 'undefined') {
-        return Promise;
+        return Promise
       }
       if (typeof $ !== 'undefined' && $.Deferred) {
-        return JQPromise;
+        return JQPromise
       }
-      return false;
+      return false
     },
 
     getCurrentPosition: function (onSuccess, onError, options) {
-      var P = module.getPromiseConstructor();
+      var P = module.getPromiseConstructor()
       if (P) {
         return new P(function (resolve, reject) {
           module.requestCurrentPosition(function (position) {
             if (typeof onSuccess === 'function') {
-              onSuccess(position);
+              onSuccess(position)
             }
-            resolve(position);
+            resolve(position)
           }, function (err) {
             if (typeof onError === 'function') {
-              onError(err);
+              onError(err)
             }
-            reject(err);
-          }, options);
-        });
+            reject(err)
+          }, options)
+        })
       }
-      return module.requestCurrentPosition(onSuccess, onError, options);
+      return module.requestCurrentPosition(onSuccess, onError, options)
     }
 
-  };
+  }
 
-  return module;
-}));
+  return module
+}))

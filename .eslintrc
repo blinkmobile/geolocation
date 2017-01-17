@@ -1,7 +1,0 @@
-{
-  "extends": "semistandard",
-  "env": {
-    "amd": true,
-    "browser": true
-  }
-}

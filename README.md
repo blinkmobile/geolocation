@@ -1,9 +1,7 @@
-# geolocation
+# geolocation.js [![Travis CI Status](https://travis-ci.org/blinkmobile/geolocation.js.svg?branch=master)](https://travis-ci.org/blinkmobile/geolocation.js) [![npm module](https://img.shields.io/npm/v/@blinkmobile/geolocation.svg)](https://www.npmjs.com/package/@blinkmobile/geolocation)
 
 wrapper for HTML5 GeoLocation
 
-[![npm module](https://img.shields.io/npm/v/@blinkmobile/geolocation.svg)](https://www.npmjs.com/package/@blinkmobile/geolocation)
-[![travis-ci](https://img.shields.io/travis/blinkmobile/geolocation.svg)](https://travis-ci.org/blinkmobile/geolocation)
 
 ## why?
 
