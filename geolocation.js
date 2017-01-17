@@ -1,19 +1,18 @@
-/* globals $:false */
 // UMD: https://github.com/umdjs/umd/blob/master/returnExports.js
 (function (root, factory) {
   'use strict'
   if (typeof define === 'function' && define.amd) {
-    define(['@blinkmobile/jqpromise'], factory)
+    define([], factory)
   } else if (typeof exports === 'object') {
-    module.exports = factory(require('@blinkmobile/jqpromise'))
+    module.exports = factory()
   } else {
     if (root.BMP) {
-      root.BMP.geolocation = factory(root.JQPromise)
+      root.BMP.geolocation = factory()
     } else {
-      root.geolocation = factory(root.JQPromise)
+      root.geolocation = factory()
     }
   }
-}(this, function (JQPromise) {
+}(this, function () {
   'use strict'
 
   var api
@@ -99,34 +98,20 @@
       }, onError, options)
     },
 
-    getPromiseConstructor: function () {
-      if (typeof Promise !== 'undefined') {
-        return Promise
-      }
-      if (typeof $ !== 'undefined' && $.Deferred) {
-        return JQPromise
-      }
-      return false
-    },
-
     getCurrentPosition: function (onSuccess, onError, options) {
-      var P = module.getPromiseConstructor()
-      if (P) {
-        return new P(function (resolve, reject) {
-          module.requestCurrentPosition(function (position) {
-            if (typeof onSuccess === 'function') {
-              onSuccess(position)
-            }
-            resolve(position)
-          }, function (err) {
-            if (typeof onError === 'function') {
-              onError(err)
-            }
-            reject(err)
-          }, options)
-        })
-      }
-      return module.requestCurrentPosition(onSuccess, onError, options)
+      return new Promise(function (resolve, reject) {
+        module.requestCurrentPosition(function (position) {
+          if (typeof onSuccess === 'function') {
+            onSuccess(position)
+          }
+          resolve(position)
+        }, function (err) {
+          if (typeof onError === 'function') {
+            onError(err)
+          }
+          reject(err)
+        }, options)
+      })
     }
 
   }

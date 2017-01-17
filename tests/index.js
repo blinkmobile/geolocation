@@ -1,8 +1,8 @@
+/* @flow */
 'use strict'
 
 // foreign modules
 
-var $ = require('jquery')
 var test = require('tape')
 
 // our modules
@@ -12,8 +12,8 @@ var geolocation = require('../geolocation')
 // this module
 
 var spy = {
-  onSuccess: null,
-  onError: null,
+  onSuccess: function () {},
+  onError: function () {},
   count: 0,
   getCurrentPosition: function (onSuccess, onError) {
     this.count += 1
@@ -40,8 +40,6 @@ var testPosition = {
   }
 }
 geolocation.setGeoLocation(spy)
-
-global.$ = $
 
 test(function (t) {
   t.ok(geolocation)
