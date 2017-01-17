@@ -25,7 +25,8 @@
     "npm": ">=2"
   },
   "files": [
-    "geolocation.js"
+    "geolocation.js",
+    "types.js"
   ],
   "homepage": "https://github.com/blinkmobile/geolocation#readme",
   "keywords": [],

@@ -1,37 +1,38 @@
+/* @flow */
 'use strict'
+
+/* :: import type { PositionLike, PositionOptionsLike } from './types.js' */
 
 var api
 
-var DEFAULT_POSITION_OPTIONS = {
+var DEFAULT_POSITION_OPTIONS /* : PositionOptions */ = {
   enableHighAccuracy: true,
   maximumAge: 0, // fresh results each time
   timeout: 10 * 1000 // take no longer than 10 seconds
 }
 
-var POSITION_OPTION_TYPES = {
-  enableHighAccuracy: 'boolean',
-  maximumAge: 'number',
-  timeout: 'number'
-}
-
-function clonePosition (position) {
-  if (!position || typeof position !== 'object' || !position.coords || typeof position.coords !== 'object') {
+function clonePosition (position /* : PositionLike */) /* : PositionLike */ {
+  var coords
+  position = position || {}
+  coords = position.coords || {}
+  if (typeof position !== 'object' || typeof coords !== 'object') {
     throw new TypeError('cannot clone non-Position object')
   }
   return {
     coords: {
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-      altitude: position.coords.altitude,
-      accuracy: position.coords.accuracy,
-      altitudeAccuracy: position.coords.altitudeAccuracy,
-      heading: position.coords.heading,
-      speed: position.coords.speed
-    }
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+      altitude: coords.altitude,
+      accuracy: coords.accuracy,
+      altitudeAccuracy: coords.altitudeAccuracy,
+      heading: coords.heading,
+      speed: coords.speed
+    },
+    timestamp: position.timestamp || Date.now()
   }
 }
 
-function getGeoLocation () {
+function getGeoLocation () /* : Geolocation | false */ {
   if (api && api.getCurrentPosition) {
     return api
   }
@@ -42,25 +43,28 @@ function getGeoLocation () {
   return false
 }
 
-function mergePositionOptions (options) {
-  var result
-  if (!options || typeof options !== 'object') {
+function mergePositionOptions (
+  options /* :? PositionOptionsLike */
+) /* : PositionOptions */ {
+  options = options || {}
+  if (typeof options !== 'object') {
     return DEFAULT_POSITION_OPTIONS
   }
-  result = {}
-  Object.keys(POSITION_OPTION_TYPES).forEach(function (option) {
-    var type = POSITION_OPTION_TYPES[option]
-    var value = options[option]
-    if (typeof options[option] === type && (type !== 'number' || !isNaN(value))) {
-      result[option] = options[option]
-    } else {
-      result[option] = DEFAULT_POSITION_OPTIONS[option]
-    }
-  })
-  return result
+
+  return {
+    enableHighAccuracy: typeof options.enableHighAccuracy === 'boolean' ? options.enableHighAccuracy : DEFAULT_POSITION_OPTIONS.enableHighAccuracy,
+
+    maximumAge: typeof options.maximumAge === 'number' && !isNaN(options.maximumAge) ? options.maximumAge : DEFAULT_POSITION_OPTIONS.maximumAge,
+
+    timeout: typeof options.timeout === 'number' && !isNaN(options.timeout) ? options.timeout : DEFAULT_POSITION_OPTIONS.timeout
+  }
 }
 
-function requestCurrentPosition (onSuccess, onError, options) {
+function requestCurrentPosition (
+  onSuccess /* : (position: PositionLike) => any */,
+  onError /* : (error: PositionError) => any */,
+  options /* :? PositionOptionsLike */
+) {
   var geolocation = getGeoLocation()
   if (!geolocation) {
     throw new Error('the current web engine does not support GeoLocation')
@@ -77,7 +81,11 @@ function requestCurrentPosition (onSuccess, onError, options) {
   }, onError, options)
 }
 
-function getCurrentPosition (onSuccess, onError, options) {
+function getCurrentPosition (
+  onSuccess /* :? (position: PositionLike) => any */,
+  onError /* :? (error: PositionError) => any */,
+  options /* :? PositionOptionsLike */
+) /* : Promise<PositionLike> */ {
   return new Promise(function (resolve, reject) {
     requestCurrentPosition(function (position) {
       if (typeof onSuccess === 'function') {
@@ -93,13 +101,12 @@ function getCurrentPosition (onSuccess, onError, options) {
   })
 }
 
-function setGeoLocation (geolocation) {
+function setGeoLocation (geolocation /* : Geolocation | Object */) {
   api = geolocation
 }
 
 module.exports = {
   DEFAULT_POSITION_OPTIONS,
-  POSITION_OPTION_TYPES,
 
   clonePosition,
   getCurrentPosition,

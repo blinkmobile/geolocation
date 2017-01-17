@@ -37,7 +37,8 @@ var testPosition = {
     altitudeAccuracy: 5,
     heading: 6,
     speed: 7
-  }
+  },
+  timestamp: Date.now()
 }
 geolocation.setGeoLocation(spy)
 
@@ -47,7 +48,8 @@ test(function (t) {
 })
 
 test('clonePosition', function (t) {
-  t.deepEqual(testPosition, geolocation.clonePosition(testPosition))
+  var position = geolocation.clonePosition(testPosition)
+  t.deepEqual(testPosition, position)
   t.end()
 })
 
@@ -57,11 +59,8 @@ test('mergePositionOptions with bad values', function (t) {
     maximumAge: 'blah',
     timeout: NaN
   }
-  var expected = {
-    enableHighAccuracy: geolocation.DEFAULT_POSITION_OPTIONS.enableHighAccuracy,
-    maximumAge: geolocation.DEFAULT_POSITION_OPTIONS.maximumAge,
-    timeout: geolocation.DEFAULT_POSITION_OPTIONS.timeout
-  }
+  var expected = geolocation.DEFAULT_POSITION_OPTIONS
+  // $FlowFixMe: testing intentionally wrong types
   t.deepEqual(geolocation.mergePositionOptions(input), expected)
   t.end()
 })
