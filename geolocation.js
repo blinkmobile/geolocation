@@ -60,6 +60,7 @@ function mergePositionOptions (
   }
 }
 
+// internal
 function requestCurrentPosition (
   onSuccess /* : (position: PositionLike) => any */,
   onError /* : (error: PositionError) => any */,
@@ -112,6 +113,5 @@ module.exports = {
   getCurrentPosition,
   getGeoLocation,
   mergePositionOptions,
-  requestCurrentPosition,
   setGeoLocation
 }

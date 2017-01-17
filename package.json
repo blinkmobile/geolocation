@@ -15,10 +15,10 @@
     "eslint-plugin-standard": "^2.0.1",
     "fixpack": "^2.3.1",
     "flow-bin": "^0.37.4",
-    "tape": "^4.0"
+    "jest": "^18.1.0"
   },
   "directories": {
-    "test": "tests"
+    "test": "__tests__"
   },
   "engines": {
     "node": ">=4",
@@ -29,6 +29,14 @@
     "types.js"
   ],
   "homepage": "https://github.com/blinkmobile/geolocation#readme",
+  "jest": {
+    "collectCoverage": true,
+    "coverageThreshold": {
+      "global": {
+        "lines": 50
+      }
+    }
+  },
   "keywords": [],
   "license": "BSD-3-Clause",
   "main": "geolocation.js",
@@ -43,7 +51,8 @@
     "eslint": "eslint --fix --cache .",
     "fixpack": "fixpack",
     "flow_check": "flow check",
+    "jest": "jest",
     "posttest": "npm run eslint && npm run flow_check && npm run fixpack",
-    "test": "node tests"
+    "test": "npm run jest"
   }
 }
