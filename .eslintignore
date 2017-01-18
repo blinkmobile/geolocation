@@ -1,2 +1,6 @@
+# temporary files
+coverage
+
 # 3rd-party files
+flow-typed
 node_modules

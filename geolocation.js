@@ -1,135 +1,106 @@
-/*globals $:false*/
-// UMD: https://github.com/umdjs/umd/blob/master/returnExports.js
-(function (root, factory) {
-  'use strict';
-  if (typeof define === 'function' && define.amd) {
-    define(['@blinkmobile/jqpromise'], factory);
-  } else if (typeof exports === 'object') {
-    module.exports = factory(require('@blinkmobile/jqpromise'));
-  } else {
-    if (root.BMP) {
-      root.BMP.geolocation = factory(root.JQPromise);
-    } else {
-      root.geolocation = factory(root.JQPromise);
+/* @flow */
+'use strict'
+
+/* :: import type {
+  GeolocationDriver, PositionLike, PositionOptionsLike
+} from './types.js' */
+
+const DEFAULT_POSITION_OPTIONS /* : PositionOptions */ = {
+  enableHighAccuracy: true,
+  maximumAge: 0, // fresh results each time
+  timeout: 10 * 1000 // take no longer than 10 seconds
+}
+
+function clonePosition (position /* : PositionLike */) /* : PositionLike */ {
+  position = position || {}
+  let coords = position.coords || {}
+  if (typeof position !== 'object' || typeof coords !== 'object') {
+    throw new TypeError('cannot clone non-Position object')
+  }
+  return {
+    coords: {
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+      altitude: coords.altitude,
+      accuracy: coords.accuracy,
+      altitudeAccuracy: coords.altitudeAccuracy,
+      heading: coords.heading,
+      speed: coords.speed
+    },
+    timestamp: position.timestamp || Date.now()
+  }
+}
+
+function mergePositionOptions (
+  options /* :? PositionOptionsLike */
+) /* : PositionOptions */ {
+  options = options || {}
+  if (typeof options !== 'object') {
+    return DEFAULT_POSITION_OPTIONS
+  }
+
+  return {
+    enableHighAccuracy: typeof options.enableHighAccuracy === 'boolean' ? options.enableHighAccuracy : DEFAULT_POSITION_OPTIONS.enableHighAccuracy,
+
+    maximumAge: typeof options.maximumAge === 'number' && !isNaN(options.maximumAge) ? options.maximumAge : DEFAULT_POSITION_OPTIONS.maximumAge,
+
+    timeout: typeof options.timeout === 'number' && !isNaN(options.timeout) ? options.timeout : DEFAULT_POSITION_OPTIONS.timeout
+  }
+}
+
+const DRIVERS_PREFERENCE = [ 'W3C' ]
+
+const DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
+
+  W3C: {
+    isAvailable: function () /* : boolean */ {
+      return !!(
+        typeof navigator !== 'undefined' &&
+        navigator.geolocation &&
+        typeof navigator.geolocation.getCurrentPosition === 'function'
+      )
+    },
+
+    getCurrentPosition: function (
+      onSuccess /* : (position: PositionLike) => any */,
+      onError /* : (error: PositionError) => any */,
+      options /* : PositionOptions */
+    ) /* : void */ {
+      navigator.geolocation.getCurrentPosition(position => {
+        onSuccess(clonePosition(position))
+      }, onError, options)
     }
   }
-}(this, function (JQPromise) {
-  'use strict';
 
-  var api;
+}
 
-  var module = {
+function detectDriver () /* : GeolocationDriver | false */ {
+  const availableDriver = DRIVERS_PREFERENCE
+    .map((name) => DRIVERS[name])
+    .find((driver) => driver.isAvailable())
+  return availableDriver || false
+}
 
-    setGeoLocation: function (geolocation) {
-      api = geolocation;
-    },
+function getCurrentPosition (
+  options /* :? PositionOptionsLike */
+) /* : Promise<PositionLike> */ {
+  const driver = detectDriver()
+  if (!driver) {
+    return Promise.reject(new Error('GeoLocation not supported'))
+  }
+  return new Promise((resolve, reject) => {
+    driver.getCurrentPosition(position => {
+      resolve(position)
+    }, err => {
+      reject(err)
+    }, mergePositionOptions(options))
+  })
+}
 
-    getGeoLocation: function () {
-      if (api && api.getCurrentPosition) {
-        return api;
-      }
-      if (typeof navigator !== 'undefined' && navigator.geolocation &&
-          navigator.geolocation.getCurrentPosition) {
-        return navigator.geolocation;
-      }
-      return false;
-    },
+module.exports = {
+  DEFAULT_POSITION_OPTIONS,
 
-    clonePosition: function (position) {
-      if (!position || typeof position !== 'object' || !position.coords || typeof position.coords !== 'object') {
-        throw new TypeError('cannot clone non-Position object');
-      }
-      return {
-        coords: {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          altitude: position.coords.altitude,
-          accuracy: position.coords.accuracy,
-          altitudeAccuracy: position.coords.altitudeAccuracy,
-          heading: position.coords.heading,
-          speed: position.coords.speed
-        }
-      };
-    },
-
-    DEFAULT_POSITION_OPTIONS: {
-      enableHighAccuracy: true,
-      maximumAge: 0, // fresh results each time
-      timeout: 10 * 1000 // take no longer than 10 seconds
-    },
-
-    POSITION_OPTION_TYPES: {
-      enableHighAccuracy: 'boolean',
-      maximumAge: 'number',
-      timeout: 'number'
-    },
-
-    mergePositionOptions: function (options) {
-      var result;
-      if (!options || typeof options !== 'object') {
-        return module.DEFAULT_POSITION_OPTIONS;
-      }
-      result = {};
-      Object.keys(module.POSITION_OPTION_TYPES).forEach(function (option) {
-        var type = module.POSITION_OPTION_TYPES[option];
-        var value = options[option];
-        if (typeof options[option] === type && (type !== 'number' || !isNaN(value))) {
-          result[option] = options[option];
-        } else {
-          result[option] = module.DEFAULT_POSITION_OPTIONS[option];
-        }
-      });
-      return result;
-    },
-
-    requestCurrentPosition: function (onSuccess, onError, options) {
-      var geolocation = module.getGeoLocation();
-      if (!geolocation) {
-        throw new Error('the current web engine does not support GeoLocation');
-      }
-      if (typeof onSuccess !== 'function') {
-        throw new TypeError('getCurrentPosition(): 1st parameter must be a Function to handle success');
-      }
-      if (typeof onError !== 'function') {
-        throw new TypeError('getCurrentPosition(): 2nd parameter must be a Function to handle error');
-      }
-      options = module.mergePositionOptions(options);
-      return geolocation.getCurrentPosition(function (position) {
-        onSuccess(module.clonePosition(position));
-      }, onError, options);
-    },
-
-    getPromiseConstructor: function () {
-      if (typeof Promise !== 'undefined') {
-        return Promise;
-      }
-      if (typeof $ !== 'undefined' && $.Deferred) {
-        return JQPromise;
-      }
-      return false;
-    },
-
-    getCurrentPosition: function (onSuccess, onError, options) {
-      var P = module.getPromiseConstructor();
-      if (P) {
-        return new P(function (resolve, reject) {
-          module.requestCurrentPosition(function (position) {
-            if (typeof onSuccess === 'function') {
-              onSuccess(position);
-            }
-            resolve(position);
-          }, function (err) {
-            if (typeof onError === 'function') {
-              onError(err);
-            }
-            reject(err);
-          }, options);
-        });
-      }
-      return module.requestCurrentPosition(onSuccess, onError, options);
-    }
-
-  };
-
-  return module;
-}));
+  clonePosition,
+  getCurrentPosition,
+  mergePositionOptions
+}

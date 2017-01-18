@@ -1,34 +1,58 @@
 {
   "name": "@blinkmobile/geolocation",
-  "version": "1.0.1",
   "description": "wrapper for HTML5 GeoLocation",
-  "main": "geolocation.js",
-  "scripts": {
-    "test": "eslint . && node tests && karma start"
+  "version": "1.0.1",
+  "author": "Ron Waldon",
+  "bugs": {
+    "url": "https://github.com/blinkmobile/geolocation/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^3.13.1",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-node": "^3.0.5",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1",
+    "fixpack": "^2.3.1",
+    "flow-bin": "^0.37.4",
+    "jest": "^18.1.0"
+  },
+  "directories": {
+    "test": "__tests__"
+  },
+  "engines": {
+    "node": ">=4",
+    "npm": ">=2"
   },
   "files": [
-    "geolocation.js"
+    "geolocation.js",
+    "types.js"
   ],
+  "homepage": "https://github.com/blinkmobile/geolocation#readme",
+  "jest": {
+    "collectCoverage": true,
+    "coverageThreshold": {
+      "global": {
+        "lines": 80
+      }
+    }
+  },
+  "keywords": [],
+  "license": "BSD-3-Clause",
+  "main": "geolocation.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/blinkmobile/geolocation.git"
+    "url": "git+https://github.com/blinkmobile/geolocation.git"
   },
-  "author": "Ron Waldon",
-  "license": "BSD-3-Clause",
-  "devDependencies": {
-    "eslint": "^0.23.0",
-    "eslint-config-semistandard": "^4.0",
-    "eslint-config-standard": "^3.3",
-    "jquery": "^2.1.4",
-    "karma": "^0.12.37",
-    "karma-browserify": "^4.2",
-    "karma-firefox-launcher": "^0.1.6",
-    "karma-phantomjs-launcher": "^0.2.0",
-    "karma-tap": "^1.0",
-    "phantomjs": "^1.9",
-    "tape": "^4.0"
-  },
-  "dependencies": {
-    "@blinkmobile/jqpromise": "^1.0.0"
+  "scripts": {
+    "eslint": "eslint --fix --cache .",
+    "fixpack": "fixpack",
+    "flow_check": "flow check",
+    "jest": "jest",
+    "posttest": "npm run eslint && npm run flow_check && npm run fixpack",
+    "test": "npm run jest"
   }
 }
