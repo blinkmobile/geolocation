@@ -14,7 +14,7 @@ Further, it also exposes a `Promise` API for people that prefer them.
 
 ## Requirements
 
-This library assumes ECMAScript 5 and `Promise` support.
+This library assumes ECMAScript 2015 support (including `Promise`).
 Be sure to shim these in older environments as required.
 
 

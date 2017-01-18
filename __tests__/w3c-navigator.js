@@ -1,9 +1,9 @@
 /* @flow */
 'use strict'
 
-var geolocation = require('../geolocation')
+const geolocation = require('../geolocation.js')
 
-var oldNavigatorGeolocation
+let oldNavigatorGeolocation
 
 beforeEach(() => {
   oldNavigatorGeolocation = global.navigator && global.navigator.geolocation
@@ -15,7 +15,7 @@ afterEach(() => {
   (global.navigator || {}).geolocation = oldNavigatorGeolocation
 })
 
-var testPosition = {
+const testPosition = {
   coords: {
     latitude: 1,
     longitude: 2,
@@ -28,7 +28,7 @@ var testPosition = {
   timestamp: Date.now()
 }
 
-test('getCurrentPosition with success (promise)', function () {
+test('getCurrentPosition with success (promise)', () => {
   const fakeApi = jest.fn()
     .mockImplementation((onSuccess, onError, options) => {
       setTimeout(() => onSuccess(testPosition), 0)
@@ -36,13 +36,13 @@ test('getCurrentPosition with success (promise)', function () {
   global.navigator.geolocation.getCurrentPosition = fakeApi
 
   return geolocation.getCurrentPosition()
-    .then(function (position) {
+    .then(position => {
       expect(fakeApi.mock.calls.length).toBe(1)
       expect(position).toMatchObject(testPosition)
     })
 })
 
-test('getCurrentPosition with error (promise)', function () {
+test('getCurrentPosition with error (promise)', () => {
   const fakeApi = jest.fn()
     .mockImplementation((onSuccess, onError, options) => {
       setTimeout(() => onError(new Error(':(')), 0)
@@ -53,7 +53,7 @@ test('getCurrentPosition with error (promise)', function () {
     .then(() => {
       throw new Error('unexpected resolve')
     })
-    .catch(function (err) {
+    .catch(err => {
       expect(err).toBeInstanceOf(Error)
       expect(fakeApi.mock.calls.length).toBe(1)
     })

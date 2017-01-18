@@ -3,11 +3,11 @@
 
 // our modules
 
-var geolocation = require('../geolocation')
+const geolocation = require('../geolocation.js')
 
 // this module
 
-var testPosition = {
+const testPosition = {
   coords: {
     latitude: 1,
     longitude: 2,
@@ -20,33 +20,33 @@ var testPosition = {
   timestamp: Date.now()
 }
 
-test('module', function () {
+test('module', () => {
   expect(geolocation).toBeDefined()
 })
 
-test('clonePosition', function () {
-  var position = geolocation.clonePosition(testPosition)
+test('clonePosition', () => {
+  const position = geolocation.clonePosition(testPosition)
   expect(position).toMatchObject(testPosition)
 })
 
-test('mergePositionOptions with bad values', function () {
-  var input = {
+test('mergePositionOptions with bad values', () => {
+  const input = {
     enableHighAccuracy: 1,
     maximumAge: 'blah',
     timeout: NaN
   }
-  var expected = geolocation.DEFAULT_POSITION_OPTIONS
+  const expected = geolocation.DEFAULT_POSITION_OPTIONS
   // $FlowFixMe: testing intentionally wrong types
-  var result = geolocation.mergePositionOptions(input)
+  const result = geolocation.mergePositionOptions(input)
   expect(result).toMatchObject(expected)
 })
 
-test('mergePositionOptions with good values', function () {
-  var input = {
+test('mergePositionOptions with good values', () => {
+  const input = {
     enableHighAccuracy: false,
     maximumAge: 1,
     timeout: 2
   }
-  var result = geolocation.mergePositionOptions(input)
+  const result = geolocation.mergePositionOptions(input)
   expect(result).toMatchObject(input)
 })
