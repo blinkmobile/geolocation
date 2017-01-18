@@ -28,6 +28,7 @@ export type CoordinatesLike = Coordinates | {
   heading?: number;
   speed?: number;
 }
+
 export type PositionLike = Position | {
   coords?: CoordinatesLike;
   timestamp?: number;
@@ -37,5 +38,14 @@ export type PositionOptionsLike = PositionOptions | {
   enableHighAccuracy?: boolean;
   timeout?: number;
   maximumAge?: number;
+}
+
+export type GeolocationDriver = {
+  getCurrentPosition: (
+    success: (position: PositionLike) => any,
+    error: (error: PositionError | Error) => any,
+    options: PositionOptions
+  ) => any;
+  isAvailable: () => boolean;
 }
 */

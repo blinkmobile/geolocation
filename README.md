@@ -28,14 +28,6 @@ Be sure to shim these in older environments as required.
 - @throws {TypeError} if `position` or `position.coords` are not objects
 
 
-### setGeoLocation(geolocation)
-
-- @param {GeoLocation} geolocation object that exposes the GeoLocation API
-
-This is useful for testing. We will use the provided object for all requests
-instead of `navigator.geolocation`.
-
-
 ### getCurrentPosition(options)
 
 - @param {Object} [options]

@@ -12,6 +12,8 @@
 
 -   **BREAKING**: drop W3C-callback style, return `Promise`s
 
+-   refactor to later support alternative Geolocation drivers (e.g. IP)
+
 
 ## v1.0.1 - 2015-02-24
 

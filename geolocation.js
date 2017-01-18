@@ -1,9 +1,9 @@
 /* @flow */
 'use strict'
 
-/* :: import type { PositionLike, PositionOptionsLike } from './types.js' */
-
-var api
+/* :: import type {
+  GeolocationDriver, PositionLike, PositionOptionsLike
+} from './types.js' */
 
 var DEFAULT_POSITION_OPTIONS /* : PositionOptions */ = {
   enableHighAccuracy: true,
@@ -32,17 +32,6 @@ function clonePosition (position /* : PositionLike */) /* : PositionLike */ {
   }
 }
 
-function getGeoLocation () /* : Geolocation | false */ {
-  if (api && api.getCurrentPosition) {
-    return api
-  }
-  if (typeof navigator !== 'undefined' && navigator.geolocation &&
-      navigator.geolocation.getCurrentPosition) {
-    return navigator.geolocation
-  }
-  return false
-}
-
 function mergePositionOptions (
   options /* :? PositionOptionsLike */
 ) /* : PositionOptions */ {
@@ -60,36 +49,53 @@ function mergePositionOptions (
   }
 }
 
-// internal
-function requestCurrentPosition (
-  onSuccess /* : (position: PositionLike) => any */,
-  onError /* : (error: PositionError) => any */,
-  options /* :? PositionOptionsLike */
-) {
-  var geolocation = getGeoLocation()
-  if (!geolocation) {
-    throw new Error('the current web engine does not support GeoLocation')
+var DRIVERS_PREFERENCE = [ 'W3C' ]
+
+var DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
+
+  W3C: {
+    isAvailable: function () /* : boolean */ {
+      return !!(
+        typeof navigator !== 'undefined' &&
+        navigator.geolocation &&
+        navigator.geolocation.getCurrentPosition
+      )
+    },
+
+    getCurrentPosition: function (
+      onSuccess /* : (position: PositionLike) => any */,
+      onError /* : (error: PositionError) => any */,
+      options /* : PositionOptions */
+    ) /* : void */ {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        onSuccess(clonePosition(position))
+      }, onError, options)
+    }
   }
-  options = mergePositionOptions(options)
-  geolocation.getCurrentPosition(function (position) {
-    onSuccess(clonePosition(position))
-  }, onError, options)
+
+}
+
+function detectDriver () /* : GeolocationDriver | false */ {
+  const availableDrivers = DRIVERS_PREFERENCE.filter((name) => {
+    return DRIVERS[name].isAvailable()
+  })
+  return DRIVERS[availableDrivers[0]] || false
 }
 
 function getCurrentPosition (
   options /* :? PositionOptionsLike */
 ) /* : Promise<PositionLike> */ {
+  const driver = detectDriver()
+  if (!driver) {
+    return Promise.reject(new Error('GeoLocation not supported'))
+  }
   return new Promise(function (resolve, reject) {
-    requestCurrentPosition(function (position) {
+    driver.getCurrentPosition(function (position) {
       resolve(position)
     }, function (err) {
       reject(err)
-    }, options)
+    }, mergePositionOptions(options))
   })
-}
-
-function setGeoLocation (geolocation /* : Geolocation | Object */) {
-  api = geolocation
 }
 
 module.exports = {
@@ -97,7 +103,5 @@ module.exports = {
 
   clonePosition,
   getCurrentPosition,
-  getGeoLocation,
-  mergePositionOptions,
-  setGeoLocation
+  mergePositionOptions
 }
