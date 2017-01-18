@@ -38,36 +38,6 @@ var testPosition = {
 }
 geolocation.setGeoLocation(spy)
 
-test('getCurrentPosition with success (callback)', function () {
-  return new Promise((resolve, reject) => {
-    spy.count = 0
-    geolocation.getCurrentPosition(function (position) {
-      expect(spy.count).toBe(1)
-      expect(position).toMatchObject(testPosition)
-      resolve()
-    })
-    setTimeout(function () {
-      spy.resolve(testPosition)
-    }, 0)
-  })
-})
-
-test('getCurrentPosition with error (callback)', function () {
-  return new Promise((resolve, reject) => {
-    spy.count = 0
-    geolocation.getCurrentPosition(function () {
-      reject(new Error(', unexpected resolve'))
-    }, function (err) {
-      expect(err).toBeInstanceOf(Error)
-      expect(spy.count).toBe(1)
-      resolve()
-    })
-    setTimeout(function () {
-      spy.reject(new Error(':('))
-    }, 0)
-  })
-})
-
 test('getCurrentPosition with success (promise)', function () {
   spy.count = 0
   setTimeout(function () {

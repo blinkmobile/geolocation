@@ -70,33 +70,19 @@ function requestCurrentPosition (
   if (!geolocation) {
     throw new Error('the current web engine does not support GeoLocation')
   }
-  if (typeof onSuccess !== 'function') {
-    throw new TypeError('getCurrentPosition(): 1st parameter must be a Function to handle success')
-  }
-  if (typeof onError !== 'function') {
-    throw new TypeError('getCurrentPosition(): 2nd parameter must be a Function to handle error')
-  }
   options = mergePositionOptions(options)
-  return geolocation.getCurrentPosition(function (position) {
+  geolocation.getCurrentPosition(function (position) {
     onSuccess(clonePosition(position))
   }, onError, options)
 }
 
 function getCurrentPosition (
-  onSuccess /* :? (position: PositionLike) => any */,
-  onError /* :? (error: PositionError) => any */,
   options /* :? PositionOptionsLike */
 ) /* : Promise<PositionLike> */ {
   return new Promise(function (resolve, reject) {
     requestCurrentPosition(function (position) {
-      if (typeof onSuccess === 'function') {
-        onSuccess(position)
-      }
       resolve(position)
     }, function (err) {
-      if (typeof onError === 'function') {
-        onError(err)
-      }
       reject(err)
     }, options)
   })

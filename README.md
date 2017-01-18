@@ -36,20 +36,14 @@ This is useful for testing. We will use the provided object for all requests
 instead of `navigator.geolocation`.
 
 
-### getCurrentPosition(onSuccess, onError, options)
+### getCurrentPosition(options)
 
-- @param {Function} onSuccess
-- @param {Function} onError
 - @param {Object} [options]
-- @returns {Promise} when either `Promise` or `$.Deferred` is globally available
+- @returns {Promise}
 
-Similar API as the W3C standard: http://dev.w3.org/geo/api/spec-source.html#api_description
-One difference is that we mandate the `onError` handler, to enforce good
-practices.
-The other difference is that we return a Promise when such an implementation is
-available.
+Promise style that is otherwise inspired by the W3C standard: http://dev.w3.org/geo/api/spec-source.html#api_description
 
 
-## further reading
+## Further Reading
 
 - http://dev.w3.org/geo/api/spec-source.html
