@@ -4,6 +4,9 @@
 ## Unreleased
 
 
+## 2.0.0 - 2017-01-18
+
+
 ### Changed
 
 -   **BREAKING**: needs `Promise` support, no longer falls back to `jQuery.Deferred`
