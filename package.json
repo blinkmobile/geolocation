@@ -1,7 +1,7 @@
 {
   "name": "@blinkmobile/geolocation",
   "description": "wrapper for HTML5 GeoLocation",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "Ron Waldon",
   "bugs": {
     "url": "https://github.com/blinkmobile/geolocation/issues"
@@ -52,7 +52,7 @@
     "fixpack": "fixpack",
     "flow_check": "flow check",
     "jest": "jest",
-    "posttest": "npm run eslint && npm run flow_check && npm run fixpack",
+    "posttest": "npm run eslint && npm run fixpack",
     "test": "npm run jest"
   }
 }

@@ -5,7 +5,7 @@
   GeolocationDriver, PositionLike, PositionOptionsLike
 } from './types.js' */
 
-const DEFAULT_POSITION_OPTIONS /* : PositionOptions */ = {
+var DEFAULT_POSITION_OPTIONS /* : PositionOptions */ = {
   enableHighAccuracy: true,
   maximumAge: 0, // fresh results each time
   timeout: 10 * 1000 // take no longer than 10 seconds
@@ -13,7 +13,7 @@ const DEFAULT_POSITION_OPTIONS /* : PositionOptions */ = {
 
 function clonePosition (position /* : PositionLike */) /* : PositionLike */ {
   position = position || {}
-  let coords = position.coords || {}
+  var coords = position.coords || {}
   if (typeof position !== 'object' || typeof coords !== 'object') {
     throw new TypeError('cannot clone non-Position object')
   }
@@ -48,9 +48,9 @@ function mergePositionOptions (
   }
 }
 
-const DRIVERS_PREFERENCE = [ 'W3C' ]
+var DRIVERS_PREFERENCE = ['W3C']
 
-const DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
+var DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
 
   W3C: {
     isAvailable: function () /* : boolean */ {
@@ -66,7 +66,7 @@ const DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
       onError /* : (error: PositionError) => any */,
       options /* : PositionOptions */
     ) /* : void */ {
-      navigator.geolocation.getCurrentPosition(position => {
+      navigator.geolocation.getCurrentPosition(function (position) {
         onSuccess(clonePosition(position))
       }, onError, options)
     }
@@ -75,23 +75,23 @@ const DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
 }
 
 function detectDriver () /* : GeolocationDriver | false */ {
-  const availableDriver = DRIVERS_PREFERENCE
-    .map((name) => DRIVERS[name])
-    .find((driver) => driver.isAvailable())
+  var availableDriver = DRIVERS_PREFERENCE
+    .map(function (name) { return DRIVERS[name] })
+    .find(function (driver) { return driver.isAvailable() })
   return availableDriver || false
 }
 
 function getCurrentPosition (
   options /* :? PositionOptionsLike */
 ) /* : Promise<PositionLike> */ {
-  const driver = detectDriver()
+  var driver = detectDriver()
   if (!driver) {
     return Promise.reject(new Error('GeoLocation not supported'))
   }
-  return new Promise((resolve, reject) => {
-    driver.getCurrentPosition(position => {
+  return new Promise(function (resolve, reject) {
+    driver.getCurrentPosition(function (position) {
       resolve(position)
-    }, err => {
+    }, function (err) {
       reject(err)
     }, mergePositionOptions(options))
   })
