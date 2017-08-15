@@ -5,15 +5,15 @@
   GeolocationDriver, PositionLike, PositionOptionsLike
 } from './types.js' */
 
-const DEFAULT_POSITION_OPTIONS /* : PositionOptions */ = {
+var DEFAULT_POSITION_OPTIONS /* : PositionOptions */ = {
   enableHighAccuracy: true,
   maximumAge: 0, // fresh results each time
   timeout: 10 * 1000 // take no longer than 10 seconds
 }
 
-function clonePosition (position /* : PositionLike */) /* : PositionLike */ {
+function clonePosition(position /* : PositionLike */ ) /* : PositionLike */ {
   position = position || {}
-  let coords = position.coords || {}
+  var coords = position.coords || {}
   if (typeof position !== 'object' || typeof coords !== 'object') {
     throw new TypeError('cannot clone non-Position object')
   }
@@ -31,7 +31,7 @@ function clonePosition (position /* : PositionLike */) /* : PositionLike */ {
   }
 }
 
-function mergePositionOptions (
+function mergePositionOptions(
   options /* :? PositionOptionsLike */
 ) /* : PositionOptions */ {
   options = options || {}
@@ -48,12 +48,12 @@ function mergePositionOptions (
   }
 }
 
-const DRIVERS_PREFERENCE = [ 'W3C' ]
+var DRIVERS_PREFERENCE = ['W3C']
 
-const DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
+var DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
 
   W3C: {
-    isAvailable: function () /* : boolean */ {
+    isAvailable: function() /* : boolean */ {
       return !!(
         typeof navigator !== 'undefined' &&
         navigator.geolocation &&
@@ -61,9 +61,9 @@ const DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
       )
     },
 
-    getCurrentPosition: function (
-      onSuccess /* : (position: PositionLike) => any */,
-      onError /* : (error: PositionError) => any */,
+    getCurrentPosition: function(
+      onSuccess /* : (position: PositionLike) => any */ ,
+      onError /* : (error: PositionError) => any */ ,
       options /* : PositionOptions */
     ) /* : void */ {
       navigator.geolocation.getCurrentPosition(position => {
@@ -74,17 +74,17 @@ const DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
 
 }
 
-function detectDriver () /* : GeolocationDriver | false */ {
-  const availableDriver = DRIVERS_PREFERENCE
+function detectDriver() /* : GeolocationDriver | false */ {
+  var availableDriver = DRIVERS_PREFERENCE
     .map((name) => DRIVERS[name])
     .find((driver) => driver.isAvailable())
   return availableDriver || false
 }
 
-function getCurrentPosition (
+function getCurrentPosition(
   options /* :? PositionOptionsLike */
 ) /* : Promise<PositionLike> */ {
-  const driver = detectDriver()
+  var driver = detectDriver()
   if (!driver) {
     return Promise.reject(new Error('GeoLocation not supported'))
   }
