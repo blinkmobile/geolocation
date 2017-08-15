@@ -11,7 +11,7 @@ var DEFAULT_POSITION_OPTIONS /* : PositionOptions */ = {
   timeout: 10 * 1000 // take no longer than 10 seconds
 }
 
-function clonePosition(position /* : PositionLike */ ) /* : PositionLike */ {
+function clonePosition (position /* : PositionLike */) /* : PositionLike */ {
   position = position || {}
   var coords = position.coords || {}
   if (typeof position !== 'object' || typeof coords !== 'object') {
@@ -31,7 +31,7 @@ function clonePosition(position /* : PositionLike */ ) /* : PositionLike */ {
   }
 }
 
-function mergePositionOptions(
+function mergePositionOptions (
   options /* :? PositionOptionsLike */
 ) /* : PositionOptions */ {
   options = options || {}
@@ -53,7 +53,7 @@ var DRIVERS_PREFERENCE = ['W3C']
 var DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
 
   W3C: {
-    isAvailable: function() /* : boolean */ {
+    isAvailable: function () /* : boolean */ {
       return !!(
         typeof navigator !== 'undefined' &&
         navigator.geolocation &&
@@ -61,12 +61,12 @@ var DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
       )
     },
 
-    getCurrentPosition: function(
-      onSuccess /* : (position: PositionLike) => any */ ,
-      onError /* : (error: PositionError) => any */ ,
+    getCurrentPosition: function (
+      onSuccess /* : (position: PositionLike) => any */,
+      onError /* : (error: PositionError) => any */,
       options /* : PositionOptions */
     ) /* : void */ {
-      navigator.geolocation.getCurrentPosition(position => {
+      navigator.geolocation.getCurrentPosition(function (position) {
         onSuccess(clonePosition(position))
       }, onError, options)
     }
@@ -74,24 +74,24 @@ var DRIVERS /* : { [id:string]: GeolocationDriver } */ = {
 
 }
 
-function detectDriver() /* : GeolocationDriver | false */ {
+function detectDriver () /* : GeolocationDriver | false */ {
   var availableDriver = DRIVERS_PREFERENCE
-    .map((name) => DRIVERS[name])
-    .find((driver) => driver.isAvailable())
+    .map(function (name) { return DRIVERS[name] })
+    .find(function (driver) { return driver.isAvailable() })
   return availableDriver || false
 }
 
-function getCurrentPosition(
+function getCurrentPosition (
   options /* :? PositionOptionsLike */
 ) /* : Promise<PositionLike> */ {
   var driver = detectDriver()
   if (!driver) {
     return Promise.reject(new Error('GeoLocation not supported'))
   }
-  return new Promise((resolve, reject) => {
-    driver.getCurrentPosition(position => {
+  return new Promise(function (resolve, reject) {
+    driver.getCurrentPosition(function (position) {
       resolve(position)
-    }, err => {
+    }, function (err) {
       reject(err)
     }, mergePositionOptions(options))
   })
