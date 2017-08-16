@@ -1,7 +1,7 @@
 {
   "name": "@blinkmobile/geolocation",
   "description": "wrapper for HTML5 GeoLocation",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "Ron Waldon",
   "bugs": {
     "url": "https://github.com/blinkmobile/geolocation/issues"
