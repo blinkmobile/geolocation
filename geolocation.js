@@ -84,11 +84,11 @@ function detectDriver () /* : GeolocationDriver | false */ {
 function getCurrentPosition (
   options /* :? PositionOptionsLike */
 ) /* : Promise<PositionLike> */ {
-  var driver = detectDriver()
-  if (!driver) {
-    return Promise.reject(new Error('GeoLocation not supported'))
-  }
   return new Promise(function (resolve, reject) {
+    var driver = detectDriver()
+    if (!driver) {
+      return reject(new Error('GeoLocation not supported'))
+    }
     driver.getCurrentPosition(function (position) {
       resolve(position)
     }, function (err) {
