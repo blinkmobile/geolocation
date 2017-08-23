@@ -98,9 +98,9 @@ function getCurrentPosition (
 }
 
 module.exports = {
-  DEFAULT_POSITION_OPTIONS,
+  DEFAULT_POSITION_OPTIONS: DEFAULT_POSITION_OPTIONS,
 
-  clonePosition,
-  getCurrentPosition,
-  mergePositionOptions
+  clonePosition: clonePosition,
+  getCurrentPosition: getCurrentPosition,
+  mergePositionOptions: mergePositionOptions
 }
